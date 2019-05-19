@@ -704,7 +704,7 @@ func (e *Environment) MustGetTreeID() string {
 	return MustGetTreeID(e)
 }
 
-func GetVariables(p PlatformProvider) (JSONObject, bool) {
+func GetVariables(p PlatformProvider) (Variables, bool) {
 	name := p.Prefix() + "VARIABLES"
 	value, ok := p.Lookup(name)
 	if !ok {
@@ -715,7 +715,7 @@ func GetVariables(p PlatformProvider) (JSONObject, bool) {
 		logrus.WithError(err).Warn("unable to decode value")
 		return nil, false
 	}
-	obj := JSONObject{}
+	obj := Variables{}
 	err = json.Unmarshal(data, &obj)
 	if err != nil {
 		logrus.WithError(err).Warn("unable to unmarshal value")
@@ -724,32 +724,32 @@ func GetVariables(p PlatformProvider) (JSONObject, bool) {
 	return obj, true
 }
 
-func MustGetVariables(p PlatformProvider) JSONObject {
+func MustGetVariables(p PlatformProvider) Variables {
 	v, _ := GetVariables(p)
 	return v
 }
 
-func (e *Environment) GetVariables() (JSONObject, bool) {
+func (e *Environment) GetVariables() (Variables, bool) {
 	return GetVariables(e)
 }
 
-func (e *Environment) MustGetVariables() JSONObject {
+func (e *Environment) MustGetVariables() Variables {
 	return MustGetVariables(e)
 }
 
-func GetVars(p PlatformProvider) (JSONObject, bool) {
+func GetVars(p PlatformProvider) (Variables, bool) {
 	return GetVariables(p)
 }
 
-func MustGetVars(p PlatformProvider) JSONObject {
+func MustGetVars(p PlatformProvider) Variables {
 	return MustGetVariables(p)
 }
 
-func (e *Environment) GetVars() (JSONObject, bool) {
+func (e *Environment) GetVars() (Variables, bool) {
 	return GetVars(e)
 }
 
-func (e *Environment) MustGetVars() JSONObject {
+func (e *Environment) MustGetVars() Variables {
 	return MustGetVars(e)
 }
 

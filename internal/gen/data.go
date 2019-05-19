@@ -170,7 +170,7 @@ var data = Schema{
 		{
 			Name:        "Variables",
 			Aliases:     []string{"Vars"},
-			DecodedType: "JSONObject",
+			DecodedType: "Variables",
 		},
 		{
 			Name:     "XClientCert",
