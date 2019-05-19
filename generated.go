@@ -326,7 +326,7 @@ func (v SocketProtocol) MarshalText() ([]byte, error) {
 	return nil, errors.New(v.String())
 }
 
-func GetApplication(p PlatformProvider) (*Application, bool) {
+func LookupApplication(p PlatformProvider) (*Application, bool) {
 	name := p.Prefix() + "APPLICATION"
 	value, ok := p.Lookup(name)
 	if !ok {
@@ -346,242 +346,242 @@ func GetApplication(p PlatformProvider) (*Application, bool) {
 	return &obj, true
 }
 
-func MustGetApplication(p PlatformProvider) *Application {
-	v, _ := GetApplication(p)
+func GetApplication(p PlatformProvider) *Application {
+	v, _ := LookupApplication(p)
 	return v
 }
 
-func (e *Environment) GetApplication() (*Application, bool) {
+func (e *Environment) LookupApplication() (*Application, bool) {
+	return LookupApplication(e)
+}
+
+func (e *Environment) GetApplication() *Application {
 	return GetApplication(e)
 }
 
-func (e *Environment) MustGetApplication() *Application {
-	return MustGetApplication(e)
-}
-
-func GetApplicationName(p PlatformProvider) (string, bool) {
+func LookupApplicationName(p PlatformProvider) (string, bool) {
 	name := p.Prefix() + "APPLICATION_NAME"
 	value, ok := p.Lookup(name)
 	return value, ok
 }
 
-func MustGetApplicationName(p PlatformProvider) string {
-	v, _ := GetApplicationName(p)
+func GetApplicationName(p PlatformProvider) string {
+	v, _ := LookupApplicationName(p)
 	return v
 }
 
-func (e *Environment) GetApplicationName() (string, bool) {
+func (e *Environment) LookupApplicationName() (string, bool) {
+	return LookupApplicationName(e)
+}
+
+func (e *Environment) GetApplicationName() string {
 	return GetApplicationName(e)
 }
 
-func (e *Environment) MustGetApplicationName() string {
-	return MustGetApplicationName(e)
+func LookupAppName(p PlatformProvider) (string, bool) {
+	return LookupApplicationName(p)
 }
 
-func GetAppName(p PlatformProvider) (string, bool) {
+func GetAppName(p PlatformProvider) string {
 	return GetApplicationName(p)
 }
 
-func MustGetAppName(p PlatformProvider) string {
-	return MustGetApplicationName(p)
+func (e *Environment) LookupAppName() (string, bool) {
+	return LookupAppName(e)
 }
 
-func (e *Environment) GetAppName() (string, bool) {
+func (e *Environment) GetAppName() string {
 	return GetAppName(e)
 }
 
-func (e *Environment) MustGetAppName() string {
-	return MustGetAppName(e)
-}
-
-func GetAppCommand(p PlatformProvider) (string, bool) {
+func LookupAppCommand(p PlatformProvider) (string, bool) {
 	name := p.Prefix() + "APP_COMMAND"
 	value, ok := p.Lookup(name)
 	return value, ok
 }
 
-func MustGetAppCommand(p PlatformProvider) string {
-	v, _ := GetAppCommand(p)
+func GetAppCommand(p PlatformProvider) string {
+	v, _ := LookupAppCommand(p)
 	return v
 }
 
-func (e *Environment) GetAppCommand() (string, bool) {
+func (e *Environment) LookupAppCommand() (string, bool) {
+	return LookupAppCommand(e)
+}
+
+func (e *Environment) GetAppCommand() string {
 	return GetAppCommand(e)
 }
 
-func (e *Environment) MustGetAppCommand() string {
-	return MustGetAppCommand(e)
+func LookupApplicationCommand(p PlatformProvider) (string, bool) {
+	return LookupAppCommand(p)
 }
 
-func GetApplicationCommand(p PlatformProvider) (string, bool) {
+func GetApplicationCommand(p PlatformProvider) string {
 	return GetAppCommand(p)
 }
 
-func MustGetApplicationCommand(p PlatformProvider) string {
-	return MustGetAppCommand(p)
+func (e *Environment) LookupApplicationCommand() (string, bool) {
+	return LookupApplicationCommand(e)
 }
 
-func (e *Environment) GetApplicationCommand() (string, bool) {
+func (e *Environment) GetApplicationCommand() string {
 	return GetApplicationCommand(e)
 }
 
-func (e *Environment) MustGetApplicationCommand() string {
-	return MustGetApplicationCommand(e)
-}
-
-func GetAppDir(p PlatformProvider) (string, bool) {
+func LookupAppDir(p PlatformProvider) (string, bool) {
 	name := p.Prefix() + "APP_DIR"
 	value, ok := p.Lookup(name)
 	return value, ok
 }
 
-func MustGetAppDir(p PlatformProvider) string {
-	v, _ := GetAppDir(p)
+func GetAppDir(p PlatformProvider) string {
+	v, _ := LookupAppDir(p)
 	return v
 }
 
-func (e *Environment) GetAppDir() (string, bool) {
+func (e *Environment) LookupAppDir() (string, bool) {
+	return LookupAppDir(e)
+}
+
+func (e *Environment) GetAppDir() string {
 	return GetAppDir(e)
 }
 
-func (e *Environment) MustGetAppDir() string {
-	return MustGetAppDir(e)
-}
-
-func GetBranch(p PlatformProvider) (string, bool) {
+func LookupBranch(p PlatformProvider) (string, bool) {
 	name := p.Prefix() + "BRANCH"
 	value, ok := p.Lookup(name)
 	return value, ok
 }
 
-func MustGetBranch(p PlatformProvider) string {
-	v, _ := GetBranch(p)
+func GetBranch(p PlatformProvider) string {
+	v, _ := LookupBranch(p)
 	return v
 }
 
-func (e *Environment) GetBranch() (string, bool) {
+func (e *Environment) LookupBranch() (string, bool) {
+	return LookupBranch(e)
+}
+
+func (e *Environment) GetBranch() string {
 	return GetBranch(e)
 }
 
-func (e *Environment) MustGetBranch() string {
-	return MustGetBranch(e)
-}
-
-func GetDir(p PlatformProvider) (string, bool) {
+func LookupDir(p PlatformProvider) (string, bool) {
 	name := p.Prefix() + "DIR"
 	value, ok := p.Lookup(name)
 	return value, ok
 }
 
-func MustGetDir(p PlatformProvider) string {
-	v, _ := GetDir(p)
+func GetDir(p PlatformProvider) string {
+	v, _ := LookupDir(p)
 	return v
 }
 
-func (e *Environment) GetDir() (string, bool) {
+func (e *Environment) LookupDir() (string, bool) {
+	return LookupDir(e)
+}
+
+func (e *Environment) GetDir() string {
 	return GetDir(e)
 }
 
-func (e *Environment) MustGetDir() string {
-	return MustGetDir(e)
-}
-
-func GetDocumentRoot(p PlatformProvider) (string, bool) {
+func LookupDocumentRoot(p PlatformProvider) (string, bool) {
 	name := p.Prefix() + "DOCUMENT_ROOT"
 	value, ok := p.Lookup(name)
 	return value, ok
 }
 
-func MustGetDocumentRoot(p PlatformProvider) string {
-	v, _ := GetDocumentRoot(p)
+func GetDocumentRoot(p PlatformProvider) string {
+	v, _ := LookupDocumentRoot(p)
 	return v
 }
 
-func (e *Environment) GetDocumentRoot() (string, bool) {
+func (e *Environment) LookupDocumentRoot() (string, bool) {
+	return LookupDocumentRoot(e)
+}
+
+func (e *Environment) GetDocumentRoot() string {
 	return GetDocumentRoot(e)
 }
 
-func (e *Environment) MustGetDocumentRoot() string {
-	return MustGetDocumentRoot(e)
-}
-
-func GetEnvironment(p PlatformProvider) (string, bool) {
+func LookupEnvironment(p PlatformProvider) (string, bool) {
 	name := p.Prefix() + "ENVIRONMENT"
 	value, ok := p.Lookup(name)
 	return value, ok
 }
 
-func MustGetEnvironment(p PlatformProvider) string {
-	v, _ := GetEnvironment(p)
+func GetEnvironment(p PlatformProvider) string {
+	v, _ := LookupEnvironment(p)
 	return v
 }
 
-func (e *Environment) GetEnvironment() (string, bool) {
+func (e *Environment) LookupEnvironment() (string, bool) {
+	return LookupEnvironment(e)
+}
+
+func (e *Environment) GetEnvironment() string {
 	return GetEnvironment(e)
 }
 
-func (e *Environment) MustGetEnvironment() string {
-	return MustGetEnvironment(e)
-}
-
-func GetPort(p PlatformProvider) (string, bool) {
+func LookupPort(p PlatformProvider) (string, bool) {
 	name := "PORT"
 	value, ok := p.Lookup(name)
 	return value, ok
 }
 
-func MustGetPort(p PlatformProvider) string {
-	v, _ := GetPort(p)
+func GetPort(p PlatformProvider) string {
+	v, _ := LookupPort(p)
 	return v
 }
 
-func (e *Environment) GetPort() (string, bool) {
+func (e *Environment) LookupPort() (string, bool) {
+	return LookupPort(e)
+}
+
+func (e *Environment) GetPort() string {
 	return GetPort(e)
 }
 
-func (e *Environment) MustGetPort() string {
-	return MustGetPort(e)
-}
-
-func GetProject(p PlatformProvider) (string, bool) {
+func LookupProject(p PlatformProvider) (string, bool) {
 	name := p.Prefix() + "PROJECT"
 	value, ok := p.Lookup(name)
 	return value, ok
 }
 
-func MustGetProject(p PlatformProvider) string {
-	v, _ := GetProject(p)
+func GetProject(p PlatformProvider) string {
+	v, _ := LookupProject(p)
 	return v
 }
 
-func (e *Environment) GetProject() (string, bool) {
+func (e *Environment) LookupProject() (string, bool) {
+	return LookupProject(e)
+}
+
+func (e *Environment) GetProject() string {
 	return GetProject(e)
 }
 
-func (e *Environment) MustGetProject() string {
-	return MustGetProject(e)
-}
-
-func GetProjectEntropy(p PlatformProvider) (string, bool) {
+func LookupProjectEntropy(p PlatformProvider) (string, bool) {
 	name := p.Prefix() + "PROJECT_ENTROPY"
 	value, ok := p.Lookup(name)
 	return value, ok
 }
 
-func MustGetProjectEntropy(p PlatformProvider) string {
-	v, _ := GetProjectEntropy(p)
+func GetProjectEntropy(p PlatformProvider) string {
+	v, _ := LookupProjectEntropy(p)
 	return v
 }
 
-func (e *Environment) GetProjectEntropy() (string, bool) {
+func (e *Environment) LookupProjectEntropy() (string, bool) {
+	return LookupProjectEntropy(e)
+}
+
+func (e *Environment) GetProjectEntropy() string {
 	return GetProjectEntropy(e)
 }
 
-func (e *Environment) MustGetProjectEntropy() string {
-	return MustGetProjectEntropy(e)
-}
-
-func GetRelationships(p PlatformProvider) (Relationships, bool) {
+func LookupRelationships(p PlatformProvider) (Relationships, bool) {
 	name := p.Prefix() + "RELATIONSHIPS"
 	value, ok := p.Lookup(name)
 	if !ok {
@@ -601,20 +601,20 @@ func GetRelationships(p PlatformProvider) (Relationships, bool) {
 	return obj, true
 }
 
-func MustGetRelationships(p PlatformProvider) Relationships {
-	v, _ := GetRelationships(p)
+func GetRelationships(p PlatformProvider) Relationships {
+	v, _ := LookupRelationships(p)
 	return v
 }
 
-func (e *Environment) GetRelationships() (Relationships, bool) {
+func (e *Environment) LookupRelationships() (Relationships, bool) {
+	return LookupRelationships(e)
+}
+
+func (e *Environment) GetRelationships() Relationships {
 	return GetRelationships(e)
 }
 
-func (e *Environment) MustGetRelationships() Relationships {
-	return MustGetRelationships(e)
-}
-
-func GetRoutes(p PlatformProvider) (Routes, bool) {
+func LookupRoutes(p PlatformProvider) (Routes, bool) {
 	name := p.Prefix() + "ROUTES"
 	value, ok := p.Lookup(name)
 	if !ok {
@@ -634,77 +634,77 @@ func GetRoutes(p PlatformProvider) (Routes, bool) {
 	return obj, true
 }
 
-func MustGetRoutes(p PlatformProvider) Routes {
-	v, _ := GetRoutes(p)
+func GetRoutes(p PlatformProvider) Routes {
+	v, _ := LookupRoutes(p)
 	return v
 }
 
-func (e *Environment) GetRoutes() (Routes, bool) {
+func (e *Environment) LookupRoutes() (Routes, bool) {
+	return LookupRoutes(e)
+}
+
+func (e *Environment) GetRoutes() Routes {
 	return GetRoutes(e)
 }
 
-func (e *Environment) MustGetRoutes() Routes {
-	return MustGetRoutes(e)
-}
-
-func GetSMTPHost(p PlatformProvider) (string, bool) {
+func LookupSMTPHost(p PlatformProvider) (string, bool) {
 	name := p.Prefix() + "SMTP_HOST"
 	value, ok := p.Lookup(name)
 	return value, ok
 }
 
-func MustGetSMTPHost(p PlatformProvider) string {
-	v, _ := GetSMTPHost(p)
+func GetSMTPHost(p PlatformProvider) string {
+	v, _ := LookupSMTPHost(p)
 	return v
 }
 
-func (e *Environment) GetSMTPHost() (string, bool) {
+func (e *Environment) LookupSMTPHost() (string, bool) {
+	return LookupSMTPHost(e)
+}
+
+func (e *Environment) GetSMTPHost() string {
 	return GetSMTPHost(e)
 }
 
-func (e *Environment) MustGetSMTPHost() string {
-	return MustGetSMTPHost(e)
-}
-
-func GetSocket(p PlatformProvider) (string, bool) {
+func LookupSocket(p PlatformProvider) (string, bool) {
 	name := "SOCKET"
 	value, ok := p.Lookup(name)
 	return value, ok
 }
 
-func MustGetSocket(p PlatformProvider) string {
-	v, _ := GetSocket(p)
+func GetSocket(p PlatformProvider) string {
+	v, _ := LookupSocket(p)
 	return v
 }
 
-func (e *Environment) GetSocket() (string, bool) {
+func (e *Environment) LookupSocket() (string, bool) {
+	return LookupSocket(e)
+}
+
+func (e *Environment) GetSocket() string {
 	return GetSocket(e)
 }
 
-func (e *Environment) MustGetSocket() string {
-	return MustGetSocket(e)
-}
-
-func GetTreeID(p PlatformProvider) (string, bool) {
+func LookupTreeID(p PlatformProvider) (string, bool) {
 	name := p.Prefix() + "TREE_ID"
 	value, ok := p.Lookup(name)
 	return value, ok
 }
 
-func MustGetTreeID(p PlatformProvider) string {
-	v, _ := GetTreeID(p)
+func GetTreeID(p PlatformProvider) string {
+	v, _ := LookupTreeID(p)
 	return v
 }
 
-func (e *Environment) GetTreeID() (string, bool) {
+func (e *Environment) LookupTreeID() (string, bool) {
+	return LookupTreeID(e)
+}
+
+func (e *Environment) GetTreeID() string {
 	return GetTreeID(e)
 }
 
-func (e *Environment) MustGetTreeID() string {
-	return MustGetTreeID(e)
-}
-
-func GetVariables(p PlatformProvider) (Variables, bool) {
+func LookupVariables(p PlatformProvider) (Variables, bool) {
 	name := p.Prefix() + "VARIABLES"
 	value, ok := p.Lookup(name)
 	if !ok {
@@ -724,107 +724,107 @@ func GetVariables(p PlatformProvider) (Variables, bool) {
 	return obj, true
 }
 
-func MustGetVariables(p PlatformProvider) Variables {
-	v, _ := GetVariables(p)
+func GetVariables(p PlatformProvider) Variables {
+	v, _ := LookupVariables(p)
 	return v
 }
 
-func (e *Environment) GetVariables() (Variables, bool) {
+func (e *Environment) LookupVariables() (Variables, bool) {
+	return LookupVariables(e)
+}
+
+func (e *Environment) GetVariables() Variables {
 	return GetVariables(e)
 }
 
-func (e *Environment) MustGetVariables() Variables {
-	return MustGetVariables(e)
+func LookupVars(p PlatformProvider) (Variables, bool) {
+	return LookupVariables(p)
 }
 
-func GetVars(p PlatformProvider) (Variables, bool) {
+func GetVars(p PlatformProvider) Variables {
 	return GetVariables(p)
 }
 
-func MustGetVars(p PlatformProvider) Variables {
-	return MustGetVariables(p)
+func (e *Environment) LookupVars() (Variables, bool) {
+	return LookupVars(e)
 }
 
-func (e *Environment) GetVars() (Variables, bool) {
+func (e *Environment) GetVars() Variables {
 	return GetVars(e)
 }
 
-func (e *Environment) MustGetVars() Variables {
-	return MustGetVars(e)
-}
-
-func GetXClientCert(p PlatformProvider) (string, bool) {
+func LookupXClientCert(p PlatformProvider) (string, bool) {
 	name := "X_CLIENT_CERT"
 	value, ok := p.Lookup(name)
 	return value, ok
 }
 
-func MustGetXClientCert(p PlatformProvider) string {
-	v, _ := GetXClientCert(p)
+func GetXClientCert(p PlatformProvider) string {
+	v, _ := LookupXClientCert(p)
 	return v
 }
 
-func (e *Environment) GetXClientCert() (string, bool) {
+func (e *Environment) LookupXClientCert() (string, bool) {
+	return LookupXClientCert(e)
+}
+
+func (e *Environment) GetXClientCert() string {
 	return GetXClientCert(e)
 }
 
-func (e *Environment) MustGetXClientCert() string {
-	return MustGetXClientCert(e)
-}
-
-func GetXClientDN(p PlatformProvider) (string, bool) {
+func LookupXClientDN(p PlatformProvider) (string, bool) {
 	name := "X_CLIENT_DN"
 	value, ok := p.Lookup(name)
 	return value, ok
 }
 
-func MustGetXClientDN(p PlatformProvider) string {
-	v, _ := GetXClientDN(p)
+func GetXClientDN(p PlatformProvider) string {
+	v, _ := LookupXClientDN(p)
 	return v
 }
 
-func (e *Environment) GetXClientDN() (string, bool) {
+func (e *Environment) LookupXClientDN() (string, bool) {
+	return LookupXClientDN(e)
+}
+
+func (e *Environment) GetXClientDN() string {
 	return GetXClientDN(e)
 }
 
-func (e *Environment) MustGetXClientDN() string {
-	return MustGetXClientDN(e)
-}
-
-func GetXClientIP(p PlatformProvider) (string, bool) {
+func LookupXClientIP(p PlatformProvider) (string, bool) {
 	name := "X_CLIENT_IP"
 	value, ok := p.Lookup(name)
 	return value, ok
 }
 
-func MustGetXClientIP(p PlatformProvider) string {
-	v, _ := GetXClientIP(p)
+func GetXClientIP(p PlatformProvider) string {
+	v, _ := LookupXClientIP(p)
 	return v
 }
 
-func (e *Environment) GetXClientIP() (string, bool) {
+func (e *Environment) LookupXClientIP() (string, bool) {
+	return LookupXClientIP(e)
+}
+
+func (e *Environment) GetXClientIP() string {
 	return GetXClientIP(e)
 }
 
-func (e *Environment) MustGetXClientIP() string {
-	return MustGetXClientIP(e)
-}
-
-func GetXClientVerify(p PlatformProvider) (string, bool) {
+func LookupXClientVerify(p PlatformProvider) (string, bool) {
 	name := "X_CLIENT_VERIFY"
 	value, ok := p.Lookup(name)
 	return value, ok
 }
 
-func MustGetXClientVerify(p PlatformProvider) string {
-	v, _ := GetXClientVerify(p)
+func GetXClientVerify(p PlatformProvider) string {
+	v, _ := LookupXClientVerify(p)
 	return v
 }
 
-func (e *Environment) GetXClientVerify() (string, bool) {
-	return GetXClientVerify(e)
+func (e *Environment) LookupXClientVerify() (string, bool) {
+	return LookupXClientVerify(e)
 }
 
-func (e *Environment) MustGetXClientVerify() string {
-	return MustGetXClientVerify(e)
+func (e *Environment) GetXClientVerify() string {
+	return GetXClientVerify(e)
 }

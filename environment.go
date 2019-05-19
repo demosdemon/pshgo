@@ -57,12 +57,12 @@ func (e *Environment) Prefix() string {
 func (e *Environment) Listener() (net.Listener, error) {
 	logrus.Trace("NewListener")
 
-	if socket, ok := e.GetSocket(); ok {
+	if socket, ok := e.LookupSocket(); ok {
 		logrus.WithField("socket", socket).Debug("found SOCKET")
 		return net.Listen("unix", socket)
 	}
 
-	if port, ok := e.GetPort(); ok {
+	if port, ok := e.LookupPort(); ok {
 		logrus.WithField("port", port).Debug("found PORT")
 		return net.Listen("tcp", net.JoinHostPort("127.0.0.1", port))
 	}
@@ -71,7 +71,7 @@ func (e *Environment) Listener() (net.Listener, error) {
 }
 
 func (e *Environment) Variable(key string) (interface{}, bool) {
-	if vars, ok := e.GetVariables(); ok {
+	if vars, ok := e.LookupVariables(); ok {
 		v, ok := vars[key]
 		return v, ok
 	}

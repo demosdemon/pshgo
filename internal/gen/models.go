@@ -295,8 +295,8 @@ type Variable struct {
 }
 
 func (v Variable) Render(g *Group) {
-	name := "Get" + strcase.ToCamel(v.Name)
-	mustName := "Must" + name
+	lookupName := "Lookup" + strcase.ToCamel(v.Name)
+	getName := "Get" + strcase.ToCamel(v.Name)
 
 	rType := Null()
 	if v.DecodedPointer {
@@ -311,7 +311,7 @@ func (v Variable) Render(g *Group) {
 	receiver := Id("e").Op("*").Id("Environment")
 
 	/*
-		func GetApplication(p PlatformProvider) (*Application, bool) {
+		func LookupApplication(p PlatformProvider) (*Application, bool) {
 			name := p.Prefix() + "APPLICATION"
 			value, ok := p.Lookup(name)
 			if !ok {
@@ -332,7 +332,7 @@ func (v Variable) Render(g *Group) {
 		}
 	*/
 	g.Func().
-		Id(name).
+		Id(lookupName).
 		Params(Id("p").Id("PlatformProvider")).
 		Params(rType, Bool()).
 		BlockFunc(func(g *Group) {
@@ -376,114 +376,113 @@ func (v Variable) Render(g *Group) {
 		Line()
 
 	/*
-		func MustGetApplication(p PlatformProvider) *Application {
-			v, _ := GetApplication(p)
+		func GetApplication(p PlatformProvider) *Application {
+			v, _ := LookupApplication(p)
 			return v
 		}
 	*/
 	g.Func().
-		Id(mustName).
+		Id(getName).
 		Params(Id("p").Id("PlatformProvider")).
 		Add(rType).
 		Block(
-			List(Id("v"), Id("_")).Op(":=").Id(name).Call(Id("p")),
+			List(Id("v"), Id("_")).Op(":=").Id(lookupName).Call(Id("p")),
 			Return(Id("v")),
 		).
 		Line()
 
 	/*
-		func (e *Environment) GetApplication() (*Application, bool) {
+		func (e *Environment) LookupApplication() (*Application, bool) {
+			return LookupApplication(e)
+		}
+	*/
+	g.Func().
+		Params(receiver).
+		Id(lookupName).
+		Params().
+		Params(rType, Bool()).
+		Block(
+			Return(Id(lookupName).Call(Id("e"))),
+		).
+		Line()
+
+	/*
+		func (e *Environment) GetApplication() *Application {
 			return GetApplication(e)
 		}
 	*/
 	g.Func().
 		Params(receiver).
-		Id(name).
-		Params().
-		Params(rType, Bool()).
-		Block(
-			Return(Id(name).Call(Id("e"))),
-		).
-		Line()
-
-	/*
-		func (e *Environment) MustGetApplication() *Application {
-			return MustGetApplication(e)
-		}
-	*/
-	g.Func().
-		Params(receiver).
-		Id(mustName).
+		Id(getName).
 		Params().
 		Add(rType).
 		Block(
-			Return(Id(mustName).Call(Id("e"))),
+			Return(Id(getName).Call(Id("e"))),
 		).
 		Line()
 
 	for _, a := range v.Aliases {
-		alias := "Get" + strcase.ToCamel(a)
-		mustAlias := "Must" + alias
+		lookupAlias := "Lookup" + strcase.ToCamel(a)
+		getAlias := "Get" + strcase.ToCamel(a)
 
 		/*
-			func GetApp(p PlatformProvider) (*Application, bool) {
+			func LookupApp(p PlatformProvider) (*Application, bool) {
+				return LookupApplication(p)
+			}
+		*/
+		g.Func().
+			Id(lookupAlias).
+			Params(Id("p").Id("PlatformProvider")).
+			Params(rType, Bool()).
+			Block(
+				Return(Id(lookupName).Call(Id("p"))),
+			).
+			Line()
+
+		/*
+			func GetApp(p PlatformProvider) *Application {
 				return GetApplication(p)
 			}
 		*/
 		g.Func().
-			Id(alias).
-			Params(Id("p").Id("PlatformProvider")).
-			Params(rType, Bool()).
-			Block(
-				Return(Id(name).Call(Id("p"))),
-			).
-			Line()
-
-		/*
-			func MustGetApp(p PlatformProvider) *Application {
-				return MustGetApplication(p)
-			}
-		*/
-		g.Func().
-			Id(mustAlias).
+			Id(getAlias).
 			Params(Id("p").Id("PlatformProvider")).
 			Add(rType).
 			Block(
-				Return(Id(mustName).Call(Id("p"))),
+				Return(Id(getName).Call(Id("p"))),
 			).
 			Line()
 
 		/*
-			func (e *Environment) GetApp() (*Application, bool) {
+			func (e *Environment) LookupApp() (*Application, bool) {
+				return LookupApp(e)
+			}
+		*/
+		g.Func().
+			Params(receiver).
+			Id(lookupAlias).
+			Params().
+			Params(rType, Bool()).
+			Block(
+				Return(Id(lookupAlias).Call(Id("e"))),
+			).
+			Line()
+
+		/*
+			func (e *Environment) GetApp() *Application {
 				return GetApp(e)
 			}
 		*/
 		g.Func().
 			Params(receiver).
-			Id(alias).
-			Params().
-			Params(rType, Bool()).
-			Block(
-				Return(Id(alias).Call(Id("e"))),
-			).
-			Line()
-
-		/*
-			func (e *Environment) MustGetApp() *Application {
-				return MustGetApp(e)
-			}
-		*/
-		g.Func().
-			Params(receiver).
-			Id(mustAlias).
+			Id(getAlias).
 			Params().
 			Add(rType).
 			Block(
-				Return(Id(mustAlias).Call(Id("e"))),
+				Return(Id(getAlias).Call(Id("e"))),
 			).
 			Line()
 	}
-
 }
 
 func errNotNil(g *Group, msg string) {
