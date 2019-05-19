@@ -1,9 +1,11 @@
 package pshgo_test
 
 import (
-	. "github.com/demosdemon/pshgo"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+
+	. "github.com/demosdemon/pshgo"
 )
 
 func strptr(s string) *string { return &s }
