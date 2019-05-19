@@ -2,6 +2,7 @@ package pshgo
 
 import (
 	"fmt"
+	"net/url"
 	"strings"
 )
 
@@ -51,14 +52,32 @@ func (r Relationship) URL(user, query bool) string {
 	}
 
 	if query {
-		b.WriteString("?")
-		first := true
+		values := make(url.Values, len(r.Query))
 		for k, v := range r.Query {
-			if !first {
-				b.WriteString("&")
+			switch v := v.(type) {
+			case []string:
+				values[k] = v
+			case JSONArray:
+				values[k] = make([]string, len(v))
+				for idx, val := range v {
+					values[k][idx] = fmt.Sprint(val)
+				}
+			case string:
+				values[k] = []string{v}
+			case *string:
+				values[k] = []string{*v}
+			default:
+				values[k] = []string{fmt.Sprint(v)}
 			}
-			first = false
-			_, _ = fmt.Fprintf(&b, "%s=%v", k, v)
+		}
+
+		if len(values) > 0 {
+			if r.Path == "" {
+				b.WriteString("/")
+			}
+
+			b.WriteString("?")
+			b.WriteString(values.Encode())
 		}
 	}
 
