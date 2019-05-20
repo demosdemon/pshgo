@@ -112,6 +112,24 @@ func captureOutput(fn func()) (stdout string, stderr string, err error) {
 	return stdout, stderr, err
 }
 
+func configDevNull(cfg *Config)           { cfg.Path = "/dev/null" }
+func configDevStdout(cfg *Config)         { cfg.Path = "/dev/stdout" }
+func configDevStderr(cfg *Config)         { cfg.Path = "/dev/stderr" }
+func configDiff(cfg *Config)              { cfg.Diff = true }
+func configWrite(cfg *Config)             { cfg.Write = true }
+func configExitCode(cfg *Config)          { cfg.ExitCode = true }
+func configNoClobber(cfg *Config)         { cfg.NoClobber = true }
+func configImports(cfg *Config)           { cfg.Imports = false }
+func configReturns(cfg *Config)           { cfg.Returns = false }
+func configLocal(cfg *Config)             { cfg.Local = "go.platform.sh" }
+func configAllErrors(cfg *Config)         { cfg.AllErrors = true }
+func configComments(cfg *Config)          { cfg.Comments = false }
+func configTabIndent(cfg *Config)         { cfg.TabIndent = false }
+func configTabWidth(cfg *Config)          { cfg.TabWidth = 4 }
+func configFormatOnly(cfg *Config)        { cfg.FormatOnly = true }
+func configPrintErrors(cfg *Config)       { cfg.PrintErrors = true }
+func configRemoveBareReturns(cfg *Config) { cfg.RemoveBareReturns = true }
+
 func TestNewConfig(t *testing.T) {
 	cases := []struct {
 		name         string
@@ -129,77 +147,77 @@ func TestNewConfig(t *testing.T) {
 		{
 			name:   "path",
 			args:   []string{"-path", "/dev/null"},
-			config: defaultConfig(func(cfg *Config) { cfg.Path = "/dev/null" }),
+			config: defaultConfig(configDevNull),
 		},
 		{
 			name:   "diff",
 			args:   []string{"-diff"},
-			config: defaultConfig(func(cfg *Config) { cfg.Diff = true }),
+			config: defaultConfig(configDiff),
 		},
 		{
 			name:   "write",
 			args:   []string{"-write"},
-			config: defaultConfig(func(cfg *Config) { cfg.Write = true }),
+			config: defaultConfig(configWrite),
 		},
 		{
 			name:   "exit-code",
 			args:   []string{"-exit-code"},
-			config: defaultConfig(func(cfg *Config) { cfg.ExitCode = true }),
+			config: defaultConfig(configExitCode),
 		},
 		{
 			name:   "no-clobber",
 			args:   []string{"-no-clobber"},
-			config: defaultConfig(func(cfg *Config) { cfg.NoClobber = true }),
+			config: defaultConfig(configNoClobber),
 		},
 		{
 			name:   "imports",
 			args:   []string{"-imports=false"},
-			config: defaultConfig(func(cfg *Config) { cfg.Imports = false }),
+			config: defaultConfig(configImports),
 		},
 		{
 			name:   "returns",
 			args:   []string{"-returns=false"},
-			config: defaultConfig(func(cfg *Config) { cfg.Returns = false }),
+			config: defaultConfig(configReturns),
 		},
 		{
 			name:   "local",
 			args:   []string{"-local", "go.platform.sh"},
-			config: defaultConfig(func(cfg *Config) { cfg.Local = "go.platform.sh" }),
+			config: defaultConfig(configLocal),
 		},
 		{
 			name:   "all-errors",
 			args:   []string{"-all-errors"},
-			config: defaultConfig(func(cfg *Config) { cfg.AllErrors = true }),
+			config: defaultConfig(configAllErrors),
 		},
 		{
 			name:   "comments",
 			args:   []string{"-comments=false"},
-			config: defaultConfig(func(cfg *Config) { cfg.Comments = false }),
+			config: defaultConfig(configComments),
 		},
 		{
 			name:   "tab-indent",
 			args:   []string{"-tab-indent=false"},
-			config: defaultConfig(func(cfg *Config) { cfg.TabIndent = false }),
+			config: defaultConfig(configTabIndent),
 		},
 		{
 			name:   "tab-width",
 			args:   []string{"-tab-width", "4"},
-			config: defaultConfig(func(cfg *Config) { cfg.TabWidth = 4 }),
+			config: defaultConfig(configTabWidth),
 		},
 		{
 			name:   "format-only",
 			args:   []string{"-format-only"},
-			config: defaultConfig(func(cfg *Config) { cfg.FormatOnly = true }),
+			config: defaultConfig(configFormatOnly),
 		},
 		{
 			name:   "print-errors",
 			args:   []string{"-print-errors"},
-			config: defaultConfig(func(cfg *Config) { cfg.PrintErrors = true }),
+			config: defaultConfig(configPrintErrors),
 		},
 		{
 			name:   "remove-bare-returns",
 			args:   []string{"-remove-bare-returns"},
-			config: defaultConfig(func(cfg *Config) { cfg.RemoveBareReturns = true }),
+			config: defaultConfig(configRemoveBareReturns),
 		},
 		{
 			name:         "unknown-flag",
@@ -479,13 +497,13 @@ func main() {
 		},
 		{
 			name:   "ReadPrevious/Stdout",
-			config: defaultConfig(func(cfg *Config) { cfg.Path = "/dev/stdout" }),
+			config: defaultConfig(configDevStdout),
 			mktemp: nothing,
 			render: testRender{output: tmpData},
 		},
 		{
 			name:   "ReadPrevious/Stderr",
-			config: defaultConfig(func(cfg *Config) { cfg.Path = "/dev/stderr" }),
+			config: defaultConfig(configDevStderr),
 			mktemp: nothing,
 			render: testRender{output: tmpData},
 		},
@@ -513,7 +531,7 @@ func main() {
 		},
 		{
 			name:   "GoImports/Disabled",
-			config: defaultConfig(func(cfg *Config) { cfg.Imports = false }),
+			config: defaultConfig(configImports),
 			mktemp: empty,
 			render: testRender{output: tmpData},
 			expect: []byte{},
@@ -528,14 +546,14 @@ func main() {
 		},
 		{
 			name:   "GoReturns/Disabled",
-			config: defaultConfig(func(cfg *Config) { cfg.Returns = false }),
+			config: defaultConfig(configReturns),
 			mktemp: empty,
 			render: testRender{output: tmpData},
 			expect: []byte{},
 		},
 		{
 			name:   "GoReturns/Error",
-			config: defaultConfig(func(cfg *Config) { cfg.Imports = false }),
+			config: defaultConfig(configImports),
 			mktemp: empty,
 			render: testRender{output: invalid},
 			expect: []byte{},
@@ -543,7 +561,7 @@ func main() {
 		},
 		{
 			name:   "PrintDiff/Enabled",
-			config: defaultConfig(func(cfg *Config) { cfg.Diff = true }),
+			config: defaultConfig(configDiff),
 			mktemp: empty,
 			render: testRender{output: tmpData},
 			expect: []byte{},
@@ -551,7 +569,7 @@ func main() {
 		},
 		{
 			name:   "WriteFile/NoChange",
-			config: defaultConfig(func(cfg *Config) { cfg.Write = true }),
+			config: defaultConfig(configWrite),
 			mktemp: populated,
 			render: testRender{output: tmpData},
 			expect: tmpData,
@@ -559,7 +577,7 @@ func main() {
 		},
 		{
 			name:   "WriteFile/NoClobber/Exists",
-			config: defaultConfig(func(cfg *Config) { cfg.Write = true }, func(cfg *Config) { cfg.NoClobber = true }),
+			config: defaultConfig(configWrite, configNoClobber),
 			mktemp: empty,
 			render: testRender{output: tmpData},
 			expect: []byte{},
@@ -567,7 +585,7 @@ func main() {
 		},
 		{
 			name:   "WriteFile/Enabled",
-			config: defaultConfig(func(cfg *Config) { cfg.Write = true }),
+			config: defaultConfig(configWrite),
 			mktemp: notExist,
 			render: testRender{output: tmpData},
 			expect: tmpData,
@@ -601,76 +619,6 @@ func main() {
 			assert.True(t, (err != nil) == c.err)
 			assert.Equal(t, c.stdout, stdout)
 			assert.Equal(t, c.stderr, stderr)
-		})
-	}
-}
-
-func TestConfig_ReadPrevious(t *testing.T) {
-	tmp, err := ioutil.TempFile("", "*.go")
-	require.NoError(t, err)
-
-	tmpName := tmp.Name()
-	defer os.Remove(tmpName)
-
-	tmpData := []byte(`this data is temporary`)
-	_, err = tmp.Write(tmpData)
-	require.NoError(t, err)
-	require.NoError(t, tmp.Close())
-
-	tmp, err = ioutil.TempFile("", "*.go")
-	require.NoError(t, err)
-	require.NoError(t, tmp.Close())
-	missingName := tmp.Name()
-	require.NoError(t, os.Remove(missingName))
-
-	tmp, err = ioutil.TempFile("", "*.go")
-	require.NoError(t, err)
-	_, err = tmp.Write(tmpData)
-	require.NoError(t, err)
-	require.NoError(t, tmp.Close())
-
-	accessDeniedName := tmp.Name()
-	defer os.Remove(accessDeniedName)
-
-	require.NoError(t, os.Chmod(accessDeniedName, 0200))
-
-	cases := []struct {
-		name      string
-		config    *Config
-		expect    []byte
-		expectErr bool
-	}{
-		{
-			name:   "stdout",
-			config: defaultConfig(func(cfg *Config) { cfg.Path = "/dev/stdout" }),
-		},
-		{
-			name:   "stderr",
-			config: defaultConfig(func(cfg *Config) { cfg.Path = "/dev/stderr" }),
-		},
-		{
-			name:   "existing",
-			config: defaultConfig(func(cfg *Config) { cfg.Path = tmpName }),
-			expect: tmpData,
-		},
-		{
-			name:   "missing",
-			config: defaultConfig(func(cfg *Config) { cfg.Path = missingName }),
-		},
-		{
-			name:      "access denied",
-			config:    defaultConfig(func(cfg *Config) { cfg.Path = accessDeniedName }),
-			expectErr: true,
-		},
-	}
-
-	//t.Parallel()
-	for _, c := range cases {
-		c := c
-		t.Run(c.name, func(t *testing.T) {
-			prev, err := c.config.ReadPrevious()
-			assert.True(t, (err != nil) == c.expectErr)
-			assert.Equal(t, c.expect, prev)
 		})
 	}
 }
