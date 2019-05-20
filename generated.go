@@ -326,6 +326,60 @@ func (v SocketProtocol) MarshalText() ([]byte, error) {
 	return nil, errors.New(v.String())
 }
 
+func LookupAppCommand(p PlatformProvider) (string, bool) {
+	name := p.Prefix() + "APP_COMMAND"
+	value, ok := p.Lookup(name)
+	return value, ok
+}
+
+func GetAppCommand(p PlatformProvider) string {
+	v, _ := LookupAppCommand(p)
+	return v
+}
+
+func (e *Environment) LookupAppCommand() (string, bool) {
+	return LookupAppCommand(e)
+}
+
+func (e *Environment) GetAppCommand() string {
+	return GetAppCommand(e)
+}
+
+func LookupApplicationCommand(p PlatformProvider) (string, bool) {
+	return LookupAppCommand(p)
+}
+
+func GetApplicationCommand(p PlatformProvider) string {
+	return GetAppCommand(p)
+}
+
+func (e *Environment) LookupApplicationCommand() (string, bool) {
+	return LookupApplicationCommand(e)
+}
+
+func (e *Environment) GetApplicationCommand() string {
+	return GetApplicationCommand(e)
+}
+
+func LookupAppDir(p PlatformProvider) (string, bool) {
+	name := p.Prefix() + "APP_DIR"
+	value, ok := p.Lookup(name)
+	return value, ok
+}
+
+func GetAppDir(p PlatformProvider) string {
+	v, _ := LookupAppDir(p)
+	return v
+}
+
+func (e *Environment) LookupAppDir() (string, bool) {
+	return LookupAppDir(e)
+}
+
+func (e *Environment) GetAppDir() string {
+	return GetAppDir(e)
+}
+
 func LookupApplication(p PlatformProvider) (*Application, bool) {
 	name := p.Prefix() + "APPLICATION"
 	value, ok := p.Lookup(name)
@@ -392,60 +446,6 @@ func (e *Environment) LookupAppName() (string, bool) {
 
 func (e *Environment) GetAppName() string {
 	return GetAppName(e)
-}
-
-func LookupAppCommand(p PlatformProvider) (string, bool) {
-	name := p.Prefix() + "APP_COMMAND"
-	value, ok := p.Lookup(name)
-	return value, ok
-}
-
-func GetAppCommand(p PlatformProvider) string {
-	v, _ := LookupAppCommand(p)
-	return v
-}
-
-func (e *Environment) LookupAppCommand() (string, bool) {
-	return LookupAppCommand(e)
-}
-
-func (e *Environment) GetAppCommand() string {
-	return GetAppCommand(e)
-}
-
-func LookupApplicationCommand(p PlatformProvider) (string, bool) {
-	return LookupAppCommand(p)
-}
-
-func GetApplicationCommand(p PlatformProvider) string {
-	return GetAppCommand(p)
-}
-
-func (e *Environment) LookupApplicationCommand() (string, bool) {
-	return LookupApplicationCommand(e)
-}
-
-func (e *Environment) GetApplicationCommand() string {
-	return GetApplicationCommand(e)
-}
-
-func LookupAppDir(p PlatformProvider) (string, bool) {
-	name := p.Prefix() + "APP_DIR"
-	value, ok := p.Lookup(name)
-	return value, ok
-}
-
-func GetAppDir(p PlatformProvider) string {
-	v, _ := LookupAppDir(p)
-	return v
-}
-
-func (e *Environment) LookupAppDir() (string, bool) {
-	return LookupAppDir(e)
-}
-
-func (e *Environment) GetAppDir() string {
-	return GetAppDir(e)
 }
 
 func LookupBranch(p PlatformProvider) (string, bool) {

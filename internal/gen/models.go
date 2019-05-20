@@ -281,6 +281,7 @@ func (v Variables) Swap(i, j int) {
 }
 
 func (v Variables) Render(g *Group) {
+	sort.Sort(v)
 	for _, v := range v {
 		v.Render(g)
 	}

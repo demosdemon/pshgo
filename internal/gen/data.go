@@ -4,6 +4,15 @@ var data = Schema{
 	Package: "pshgo",
 	Enums: Enums{
 		{
+			Name: "AccessType",
+			Values: EnumValues{
+				{
+					Name:  "SSH",
+					Value: "ssh",
+				},
+			},
+		},
+		{
 			Name: "AccessLevel",
 			Values: EnumValues{
 				{
@@ -17,15 +26,6 @@ var data = Schema{
 				{
 					Name:  "Admin",
 					Value: "admin",
-				},
-			},
-		},
-		{
-			Name: "AccessType",
-			Values: EnumValues{
-				{
-					Name:  "SSH",
-					Value: "ssh",
 				},
 			},
 		},
