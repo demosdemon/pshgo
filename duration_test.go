@@ -59,6 +59,7 @@ func TestDuration_MarshalText(t *testing.T) {
 		},
 	}
 
+	t.Parallel()
 	for _, c := range cases {
 		c := c
 		t.Run(c.name, func(t *testing.T) {
@@ -93,6 +94,7 @@ func TestDuration_UnmarshalText(t *testing.T) {
 		},
 	}
 
+	t.Parallel()
 	for _, c := range cases {
 		c := c
 		t.Run(c.name, func(t *testing.T) {
