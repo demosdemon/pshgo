@@ -6,7 +6,10 @@ import (
 	"net/http"
 	"time"
 
+	"golang.org/x/net/http2"
+
 	"github.com/go-playground/lars"
+	"golang.org/x/net/http2/h2c"
 
 	"github.com/demosdemon/pshgo"
 	"github.com/demosdemon/pshgo/cmd/serve/middleware"
@@ -58,10 +61,11 @@ func New(g *Globals) *Server {
 func (s *Server) Serve(ctx context.Context, l net.Listener) error {
 	done := make(chan error)
 
-	srv := http.Server{Handler: s.LARS.Serve()}
+	h2s := http2.Server{}
+	h1s := http.Server{Handler: h2c.NewHandler(s.LARS.Serve(), &h2s)}
 
 	go func() {
-		done <- srv.Serve(l)
+		done <- h1s.Serve(l)
 	}()
 
 	go func() {
@@ -72,11 +76,11 @@ func (s *Server) Serve(ctx context.Context, l net.Listener) error {
 		defer cancel()
 
 		// gracefully shutdown server within 15 seconds
-		err := srv.Shutdown(newCtx)
+		err := h1s.Shutdown(newCtx)
 
 		// if graceful shutdown fails, use force
 		if err != nil {
-			_ = srv.Close()
+			_ = h1s.Close()
 		}
 	}()
 
