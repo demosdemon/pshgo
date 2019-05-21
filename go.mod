@@ -21,6 +21,7 @@ require (
 	github.com/sirupsen/logrus v1.4.2
 	github.com/sqs/goreturns v0.0.0-20181028201513-538ac6014518
 	github.com/stretchr/testify v1.3.0
+	golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2
 	golang.org/x/net v0.0.0-20190520210107-018c4d40a106 // indirect
 	golang.org/x/sys v0.0.0-20190520201301-c432e742b0af // indirect
 	golang.org/x/tools v0.0.0-20190520220859-26647e34d3c0

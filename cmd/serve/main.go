@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"flag"
+	"io"
+	"math/rand"
 	"os"
 	"time"
 
@@ -10,8 +12,9 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/octago/sflags/gen/gflag"
 	"github.com/sirupsen/logrus"
+	"golang.org/x/crypto/ssh/terminal"
 
-	. "github.com/demosdemon/pshgo"
+	"github.com/demosdemon/pshgo"
 	"github.com/demosdemon/pshgo/cmd/serve/ctxutils"
 	_ "github.com/demosdemon/pshgo/cmd/serve/routes"
 	_ "github.com/demosdemon/pshgo/cmd/serve/routes/env"
@@ -19,7 +22,10 @@ import (
 )
 
 func init() {
+	f := logrus.JSONFormatter{PrettyPrint: isTerm(logrus.StandardLogger().Out)}
+	logrus.SetFormatter(&f)
 	logrus.SetLevel(logrus.TraceLevel)
+	rand.Seed(time.Now().UnixNano())
 }
 
 func main() {
@@ -46,8 +52,9 @@ type Config struct {
 
 func NewConfig(args []string) (*Config, error) {
 	cfg := &Config{
-		Prefix: "PLATFORM_",
-		DotEnv: ".env",
+		Prefix:          "PLATFORM_",
+		DotEnv:          ".env",
+		ShutdownTimeout: server.DefaultShutdownTimeout,
 	}
 
 	fs := flag.NewFlagSet("serve", flag.ContinueOnError)
@@ -75,12 +82,12 @@ func (c *Config) Execute() error {
 		return err
 	}
 
-	environ := LayeredProvider{
-		MapProvider(dotenv),
-		DefaultProvider,
+	environ := pshgo.LayeredProvider{
+		pshgo.MapProvider(dotenv),
+		pshgo.DefaultProvider,
 	}
 
-	env := NewEnvironmentWithProvider(c.Prefix, environ)
+	env := pshgo.NewEnvironmentWithProvider(c.Prefix, environ)
 
 	s := server.New(&server.Globals{
 		Environment: env,
@@ -97,6 +104,7 @@ func (c *Config) Execute() error {
 	ctx, cancel := ctxutils.CancelContextWithSignal(context.Background())
 	defer cancel()
 
+	server.DefaultShutdownTimeout = c.ShutdownTimeout
 	return s.Serve(ctx, l)
 }
 
@@ -104,4 +112,11 @@ func must(err error) {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func isTerm(w io.Writer) bool {
+	if f, ok := w.(*os.File); ok {
+		return terminal.IsTerminal(int(f.Fd()))
+	}
+	return false
 }

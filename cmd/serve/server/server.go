@@ -7,8 +7,10 @@ import (
 	"time"
 
 	"github.com/go-playground/lars"
+	"github.com/sirupsen/logrus"
 
 	"github.com/demosdemon/pshgo"
+	"github.com/demosdemon/pshgo/cmd/serve/errors"
 	"github.com/demosdemon/pshgo/cmd/serve/middleware"
 )
 
@@ -30,7 +32,7 @@ type (
 		*lars.LARS
 	}
 
-	Handler func(ctx *Context)
+	Handler = func(ctx *Context) error
 )
 
 func New(g *Globals) *Server {
@@ -38,14 +40,14 @@ func New(g *Globals) *Server {
 		LARS: lars.New(),
 	}
 
-	tpl := func(*Context) {}
+	tpl := func(*Context) error { return nil }
 
 	s.RegisterContext(newContext(g))
-	s.RegisterCustomHandler(tpl, castContext)
 	s.RegisterCustomHandler(Handler(tpl), castContext)
 
 	s.Use(
 		// order is important
+		middleware.NewRequest,
 		middleware.Log,
 		middleware.Recover,
 	)
@@ -92,15 +94,37 @@ func (s *Server) Serve(ctx context.Context, l net.Listener) error {
 }
 
 func castContext(c lars.Context, handler lars.Handler) {
-	var hdlr Handler
-	if h, ok := handler.(Handler); ok {
-		hdlr = h
+	var err error
+	if hdlr, ok := handler.(Handler); ok {
+		if ctx, ok := c.(*Context); ok {
+			err = hdlr(ctx)
+		} else {
+			err = errors.InternalServerError("invalid context", nil)
+		}
 	} else {
-		hdlr = handler.(func(*Context))
+		err = errors.InternalServerError("invalid handler", nil)
 	}
 
-	ctx := c.(*Context)
-	hdlr(ctx)
+	if err != nil {
+		if c.Response().Committed() {
+			logrus.WithError(err).Error("error received after committing the result")
+			return
+		}
+
+		logrus.WithError(err).Error("handler returned an error")
+
+		var err2 error
+
+		if httpError, ok := err.(errors.HTTPError); ok {
+			err2 = c.JSON(httpError.StatusCode, err)
+		} else {
+			err2 = c.Text(http.StatusInternalServerError, err.Error())
+		}
+
+		if err2 != nil {
+			logrus.WithError(err2).Error("error while writing error response")
+		}
+	}
 }
 
 func newContext(g *Globals) lars.ContextFunc {

@@ -14,16 +14,15 @@ func init() {
 	})
 }
 
-func GetEnv(c *server.Context) {
+func GetEnv(c *server.Context) error {
 	env := pshgo.CloneProvider(c).(pshgo.MapProvider)
-	_ = c.JSON(200, env)
+	return c.JSON(200, env)
 }
 
-func GetApplication(c *server.Context) {
+func GetApplication(c *server.Context) error {
 	app := c.GetApplication()
 	if app == nil {
-		_ = c.Text(400, "Not Found")
-	} else {
-		_ = c.JSON(200, app)
+		return c.Text(400, "Not Found")
 	}
+	return c.JSON(200, app)
 }

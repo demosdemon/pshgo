@@ -1,36 +1,46 @@
 package middleware
 
 import (
-	"time"
-
 	"github.com/go-playground/lars"
 	"github.com/sirupsen/logrus"
 
 	"github.com/demosdemon/pshgo/cmd/serve/cpanic"
 )
 
+type PanicHandler interface {
+	HandlePanic(p *cpanic.Panic)
+}
+
+func HandlePanic(c lars.Context, p *cpanic.Panic) {
+	if ph, ok := c.(PanicHandler); ok {
+		ph.HandlePanic(p)
+	}
+
+	res := c.Response()
+	if res.Status() != 200 || res.Committed() {
+		return
+	}
+
+	_ = c.JSON(500, map[string]interface{}{"panic": p.Value})
+}
+
 func Recover(c lars.Context) {
-	start := time.Now()
+	if req, ok := c.Value(RequestContextKey).(*Request); ok {
+		defer cpanic.Recover(func(p *cpanic.Panic) {
+			req.Panic = p
 
-	defer cpanic.Recover(func(p *cpanic.Panic) {
-		logrus.
-			WithFields(requestFields(c.Request())).
-			WithFields(logrus.Fields{
-				"start": start,
-				"delay": time.Since(start),
-			}).
-			Error("recovering from panic")
+			logrus.
+				WithFields(logrus.Fields{
+					"panic":      p.Value,
+					"request_id": req.ID,
+					"url":        req.URL,
+					"delay":      p.Time.Sub(req.Start),
+				}).
+				Error("recovering from panic")
 
-		logrus.Printf("\n%s", p)
-
-		resp := c.Response()
-		if resp.Status() != 200 || resp.Committed() {
-			return
-		}
-
-		text, _ := p.MarshalText()
-		_ = c.TextBytes(500, text)
-	})()
+			HandlePanic(c, p)
+		})
+	}
 
 	c.Next()
 }
