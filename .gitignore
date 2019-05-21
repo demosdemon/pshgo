@@ -17,3 +17,5 @@
 ### Project specific ignores
 # don't commit go.sum for library projects
 go.sum
+/serve
+.env

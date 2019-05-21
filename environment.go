@@ -18,6 +18,13 @@ func NewEnvironment(prefix string) *Environment {
 	}
 }
 
+func NewEnvironmentWithProvider(prefix string, p Provider) *Environment {
+	return &Environment{
+		p:      p,
+		prefix: prefix,
+	}
+}
+
 func (e *Environment) Lookup(key string) (string, bool) {
 	return e.provider().Lookup(key)
 }
