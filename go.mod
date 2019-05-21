@@ -1,6 +1,6 @@
 module github.com/demosdemon/pshgo
 
-go 1.11
+go 1.12
 
 require (
 	github.com/dave/jennifer v1.3.0
