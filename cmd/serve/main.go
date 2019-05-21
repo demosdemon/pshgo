@@ -14,6 +14,7 @@ import (
 	. "github.com/demosdemon/pshgo"
 	"github.com/demosdemon/pshgo/cmd/serve/ctxutils"
 	_ "github.com/demosdemon/pshgo/cmd/serve/routes"
+	_ "github.com/demosdemon/pshgo/cmd/serve/routes/env"
 	"github.com/demosdemon/pshgo/cmd/serve/server"
 )
 
