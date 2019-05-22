@@ -17,13 +17,17 @@ import (
 	"github.com/demosdemon/pshgo"
 	"github.com/demosdemon/pshgo/cmd/serve/ctxutils"
 	_ "github.com/demosdemon/pshgo/cmd/serve/routes"
+	_ "github.com/demosdemon/pshgo/cmd/serve/routes/api"
 	_ "github.com/demosdemon/pshgo/cmd/serve/routes/env"
 	"github.com/demosdemon/pshgo/cmd/serve/server"
 )
 
 func init() {
-	f := logrus.JSONFormatter{PrettyPrint: isTerm(logrus.StandardLogger().Out)}
-	logrus.SetFormatter(&f)
+	if isTerm(logrus.StandardLogger().Out) {
+		logrus.SetFormatter(&logrus.TextFormatter{})
+	} else {
+		logrus.SetFormatter(&logrus.JSONFormatter{})
+	}
 	logrus.SetLevel(logrus.TraceLevel)
 	rand.Seed(time.Now().UnixNano())
 }
@@ -101,7 +105,7 @@ func (c *Config) Execute() error {
 		return err
 	}
 
-	ctx, cancel := ctxutils.CancelContextWithSignal(context.Background())
+	ctx, cancel := ctxutils.CancelContextWithSignal(context.Background(), os.Interrupt, os.Kill)
 	defer cancel()
 
 	server.DefaultShutdownTimeout = c.ShutdownTimeout

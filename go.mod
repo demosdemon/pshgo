@@ -8,6 +8,7 @@ require (
 	github.com/go-openapi/inflect v0.19.0
 	github.com/go-playground/form v3.1.4+incompatible // indirect
 	github.com/go-playground/lars v4.0.1+incompatible
+	github.com/google/uuid v1.1.1
 	github.com/gorilla/websocket v1.4.0 // indirect
 	github.com/hashicorp/go-multierror v1.0.0
 	github.com/iancoleman/strcase v0.0.0-20190422225806-e506e3ef7365

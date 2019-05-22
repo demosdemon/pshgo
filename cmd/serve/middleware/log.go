@@ -7,13 +7,24 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+const (
+	LogContextKey = "github.com/demosdemon/pshgo/cmd/serve/middleware/LogContextKey"
+)
+
+type (
+	Logger = *logrus.Entry
+)
+
 func Log(c lars.Context) {
 	req, ok := c.Value(RequestContextKey).(*Request)
 
 	if ok {
+		log := logrus.WithField("request_id", req.ID)
+		c.Set(LogContextKey, log)
+
 		logrus.WithField("request", req).Info("start request")
 
-		tick := time.NewTicker(time.Second)
+		tick := time.NewTicker(time.Second * 30)
 		defer tick.Stop()
 
 		go func() {

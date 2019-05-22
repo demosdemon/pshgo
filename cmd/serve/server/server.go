@@ -57,6 +57,11 @@ func New(g *Globals) *Server {
 	return &s
 }
 
+func (c *Context) Log() middleware.Logger {
+	v, _ := c.Value(middleware.LogContextKey).(middleware.Logger)
+	return v
+}
+
 func (s *Server) Serve(ctx context.Context, l net.Listener) error {
 	done := make(chan error)
 
