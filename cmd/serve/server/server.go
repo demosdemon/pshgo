@@ -2,7 +2,6 @@ package server
 
 import (
 	"context"
-	"github.com/demosdemon/pshgo/cmd/serve/cpanic"
 	"net"
 	"net/http"
 	"time"
@@ -11,6 +10,7 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"github.com/demosdemon/pshgo"
+	"github.com/demosdemon/pshgo/cmd/serve/cpanic"
 	"github.com/demosdemon/pshgo/cmd/serve/errors"
 	"github.com/demosdemon/pshgo/cmd/serve/middleware"
 )

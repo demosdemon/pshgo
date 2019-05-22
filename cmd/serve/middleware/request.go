@@ -5,13 +5,15 @@ import (
 	"encoding/base32"
 	"encoding/json"
 	"fmt"
-	"github.com/demosdemon/pshgo"
-	"github.com/demosdemon/pshgo/cmd/serve/cpanic"
-	"github.com/go-playground/lars"
-	"github.com/sirupsen/logrus"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/go-playground/lars"
+	"github.com/sirupsen/logrus"
+
+	"github.com/demosdemon/pshgo"
+	"github.com/demosdemon/pshgo/cmd/serve/cpanic"
 )
 
 const (
