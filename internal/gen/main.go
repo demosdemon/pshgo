@@ -203,12 +203,8 @@ func (c *Config) Execute(r Render) error {
 	_ = c.PrintDiff(os.Stdout, prev, current)
 
 	err = c.WriteFile(prev, current)
-	if err == ErrNoChange {
-		if c.ExitCode {
-			logrus.WithError(err).Fatal()
-		} else {
-			err = nil
-		}
+	if err == ErrNoChange && !c.ExitCode {
+		err = nil
 	}
 
 	return err

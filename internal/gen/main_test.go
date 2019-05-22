@@ -568,8 +568,16 @@ func main() {
 			stdout: "--- a\n+++ b\n@@ -1 +1,10 @@\n+// this file is temporary and safe to delete\n \n+package main\n+\n+import \"log\"\n+\n+func main() {\n+\tlog.Println(\"Hello, World\")\n+}\n+\n",
 		},
 		{
-			name:   "WriteFile/NoChange",
+			name:   "WriteFile/NoChange/NoExit",
 			config: defaultConfig(configWrite),
+			mktemp: populated,
+			render: testRender{output: tmpData},
+			expect: tmpData,
+			err:    false,
+		},
+		{
+			name:   "WriteFile/NoChange/Exit",
+			config: defaultConfig(configWrite, configExitCode),
 			mktemp: populated,
 			render: testRender{output: tmpData},
 			expect: tmpData,
