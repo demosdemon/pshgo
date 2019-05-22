@@ -26,13 +26,8 @@ func CancelContextWithSignal(parent context.Context, s ...os.Signal) (context.Co
 	go func() {
 		defer realCancel()
 		for sig := range ch {
-			for _, ss := range s {
-				if sig == ss {
-					logrus.WithField("signal", sig).Info("signal received")
-					return
-				}
-			}
-			logrus.WithField("signal", sig).Info("ignoring signal")
+			logrus.WithField("signal", sig).Info("signal received")
+			break
 		}
 	}()
 
