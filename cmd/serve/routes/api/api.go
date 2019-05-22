@@ -4,16 +4,18 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/demosdemon/pshgo/cmd/serve/server"
-	"github.com/go-playground/lars"
-	"github.com/go-playground/lars/middleware"
-	"github.com/google/uuid"
 	"io"
 	"io/ioutil"
 	"math/rand"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/go-playground/lars"
+	"github.com/go-playground/lars/middleware"
+	"github.com/google/uuid"
+
+	"github.com/demosdemon/pshgo/cmd/serve/server"
 )
 
 const (

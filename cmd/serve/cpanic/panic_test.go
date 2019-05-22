@@ -1,9 +1,11 @@
 package cpanic_test
 
 import (
-	. "github.com/demosdemon/pshgo/cmd/serve/cpanic"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+
+	. "github.com/demosdemon/pshgo/cmd/serve/cpanic"
 )
 
 func TestRecover(t *testing.T) {

@@ -2,11 +2,13 @@ package ctxutils_test
 
 import (
 	"context"
-	"github.com/demosdemon/pshgo/cmd/serve/ctxutils"
-	"github.com/stretchr/testify/require"
 	"os"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/require"
+
+	"github.com/demosdemon/pshgo/cmd/serve/ctxutils"
 )
 
 func TestCancelContextWithSignal(t *testing.T) {
