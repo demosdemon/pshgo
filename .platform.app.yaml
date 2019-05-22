@@ -6,7 +6,6 @@ hooks:
   build: |
     set -eux
     time go get ./...
-    time go test -v -cover github.com/demosdemon/pshgo/...
     # abort the build if generated code is not up-to-date
     if time go run ./internal/gen -path generated.go -exit-code; then
       echo "Generated code is out-of-date!" >&2
