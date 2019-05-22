@@ -33,18 +33,8 @@ func Recover(fn Handler) {
 
 func (p Panic) MarshalText() ([]byte, error) {
 	var buf bytes.Buffer
-	var err error
-
-	_, err = fmt.Fprintf(&buf, "panic: %v\n\n", p.Value)
-	if err != nil {
-		return nil, err
-	}
-
-	_, err = fmt.Fprint(&buf, p.Trace)
-	if err != nil {
-		return nil, err
-	}
-
+	_, _ = fmt.Fprintf(&buf, "panic: %v\n\n", p.Value)
+	_, _ = fmt.Fprint(&buf, p.Trace)
 	return buf.Bytes(), nil
 }
 
