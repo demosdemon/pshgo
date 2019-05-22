@@ -5,7 +5,6 @@ import (
 	"encoding/base32"
 	"fmt"
 	"net/http"
-	"net/url"
 	"strings"
 	"time"
 
@@ -26,7 +25,7 @@ type Request struct {
 	ClientIP   string            `json:"client_id"`
 	RemoteAddr string            `json:"remote_addr"`
 	Method     string            `json:"method"`
-	URL        *url.URL          `json:"url"`
+	URL        string            `json:"url"`
 	Proto      string            `json:"proto"`
 	Referrer   string            `json:"referrer,omitempty"`
 	UserAgent  string            `json:"use_agent"`
@@ -48,7 +47,7 @@ func NewRequest(c lars.Context) {
 		ClientIP:   c.ClientIP(),
 		RemoteAddr: req.RemoteAddr,
 		Method:     req.Method,
-		URL:        req.URL,
+		URL:        req.URL.String(),
 		Proto:      req.Proto,
 		Referrer:   req.Referer(),
 		UserAgent:  req.UserAgent(),
