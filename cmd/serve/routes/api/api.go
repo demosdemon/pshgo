@@ -9,6 +9,7 @@ import (
 	"github.com/go-playground/lars/middleware"
 	"github.com/google/uuid"
 	"io"
+	"io/ioutil"
 	"math/rand"
 	"net/http"
 	"strconv"
@@ -221,6 +222,11 @@ func getForm(req *http.Request) map[string][]string {
 func getData(req *http.Request) []byte {
 	var buf bytes.Buffer
 	_, _ = buf.ReadFrom(req.Body)
+
+	// replace body with a copy that can be read again
+	_ = req.Body.Close()
+	req.Body = ioutil.NopCloser(&buf)
+
 	return buf.Bytes()
 }
 
