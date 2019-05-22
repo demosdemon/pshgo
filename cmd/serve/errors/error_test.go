@@ -1,10 +1,12 @@
 package errors_test
 
 import (
-	. "github.com/demosdemon/pshgo/cmd/serve/errors"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+
+	. "github.com/demosdemon/pshgo/cmd/serve/errors"
 )
 
 func TestHTTPError_Error(t *testing.T) {
