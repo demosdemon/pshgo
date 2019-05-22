@@ -3,14 +3,15 @@ package middleware
 import (
 	"crypto/rand"
 	"encoding/base32"
+	"encoding/json"
 	"fmt"
+	"github.com/demosdemon/pshgo"
+	"github.com/demosdemon/pshgo/cmd/serve/cpanic"
+	"github.com/go-playground/lars"
+	"github.com/sirupsen/logrus"
 	"net/http"
 	"strings"
 	"time"
-
-	"github.com/go-playground/lars"
-
-	"github.com/demosdemon/pshgo/cmd/serve/cpanic"
 )
 
 const (
@@ -22,7 +23,7 @@ type Request struct {
 	Start      time.Time         `json:"start"`
 	ID         string            `json:"id"`
 	Username   string            `json:"username,omitempty"`
-	ClientIP   string            `json:"client_id"`
+	ClientIP   string            `json:"client_ip"`
 	RemoteAddr string            `json:"remote_addr"`
 	Method     string            `json:"method"`
 	URL        string            `json:"url"`
@@ -31,7 +32,7 @@ type Request struct {
 	UserAgent  string            `json:"use_agent"`
 	Host       string            `json:"host"`
 	Headers    map[string]string `json:"headers"`
-	Delay      time.Duration     `json:"delay,omitempty"`
+	Delay      pshgo.Duration    `json:"delay,omitempty"`
 	Status     int               `json:"status,omitempty"`
 	Size       int64             `json:"size,omitempty"`
 	Panic      *cpanic.Panic     `json:"panic,omitempty"`
@@ -80,7 +81,7 @@ func cloneHeaders(h http.Header) map[string]string {
 
 // Update returns a new Request object with fields updated from the lars response.
 func (r *Request) UpdateLARS(res *lars.Response) {
-	r.Delay = time.Since(r.Start)
+	r.Delay.Duration = time.Since(r.Start)
 	r.Status = res.Status()
 	r.Size = res.Size()
 }
@@ -112,4 +113,15 @@ func (r Request) String() string {
 	}
 
 	return strings.Join(pieces, " ")
+}
+
+func (r Request) Fields() logrus.Fields {
+	if r.Delay.Duration == 0 {
+		r.Delay.Duration = time.Since(r.Start)
+	}
+
+	data, _ := json.Marshal(r)
+	var rv logrus.Fields
+	_ = json.Unmarshal(data, &rv)
+	return rv
 }

@@ -29,12 +29,17 @@ func Recover(c lars.Context) {
 		defer cpanic.Recover(func(p *cpanic.Panic) {
 			req.Panic = p
 
-			logrus.
+			var log Logger
+			if l, ok := c.(LogContext); ok {
+				log = l.Log()
+			} else {
+				log = logrus.WithFields(req.Fields())
+			}
+
+			log.
 				WithFields(logrus.Fields{
-					"panic":      p.Value,
-					"request_id": req.ID,
-					"url":        req.URL,
-					"delay":      p.Time.Sub(req.Start),
+					"panic":  p.Value,
+					"offset": p.Time.Sub(req.Start).String(),
 				}).
 				Error("recovering from panic")
 

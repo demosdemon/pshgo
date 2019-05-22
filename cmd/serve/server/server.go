@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"github.com/demosdemon/pshgo/cmd/serve/cpanic"
 	"net"
 	"net/http"
 	"time"
@@ -60,6 +61,10 @@ func New(g *Globals) *Server {
 func (c *Context) Log() middleware.Logger {
 	v, _ := c.Value(middleware.LogContextKey).(middleware.Logger)
 	return v
+}
+
+func (c *Context) HandlePanic(p *cpanic.Panic) {
+	_ = c.Text(500, p.String())
 }
 
 func (s *Server) Serve(ctx context.Context, l net.Listener) error {

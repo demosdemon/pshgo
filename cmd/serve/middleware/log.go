@@ -13,37 +13,43 @@ const (
 
 type (
 	Logger = *logrus.Entry
+
+	LogContext interface {
+		Log() Logger
+	}
 )
 
 func Log(c lars.Context) {
+	log := logrus.WithFields(logrus.Fields{
+		"start": time.Now(),
+		"url":   c.Request().URL.String(),
+	})
+
 	req, ok := c.Value(RequestContextKey).(*Request)
 
 	if ok {
-		log := logrus.WithField("request_id", req.ID)
+		log = log.WithField("request_id", req.ID)
 		c.Set(LogContextKey, log)
 
-		logrus.WithField("request", req).Info("start request")
-
-		tick := time.NewTicker(time.Second * 30)
-		defer tick.Stop()
-
-		go func() {
-			for t := range tick.C {
-				logrus.
-					WithFields(logrus.Fields{
-						"request_id": req.ID,
-						"url":        req.URL,
-						"delay":      t.Sub(req.Start),
-					}).
-					Info("in-progress request")
-			}
-		}()
+		log = log.WithFields(req.Fields())
 	}
+
+	log.Info("start")
+
+	tick := time.NewTicker(time.Second * 30)
+	defer tick.Stop()
+	go func() {
+		for t := range tick.C {
+			log.WithField("delay", t.Sub(req.Start).String()).Info("pending")
+		}
+	}()
 
 	c.Next()
 
 	if ok {
 		req.UpdateLARS(c.Response())
-		logrus.WithField("request", req).Info("end request")
+		log = log.WithFields(req.Fields())
 	}
+
+	log.Info("end")
 }

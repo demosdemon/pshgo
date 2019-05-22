@@ -24,9 +24,10 @@ import (
 
 func init() {
 	if isTerm(logrus.StandardLogger().Out) {
+		logrus.SetReportCaller(true)
 		logrus.SetFormatter(&logrus.TextFormatter{})
 	} else {
-		logrus.SetFormatter(&logrus.JSONFormatter{})
+		logrus.SetFormatter(&logrus.JSONFormatter{DataKey: "fields"})
 	}
 	logrus.SetLevel(logrus.TraceLevel)
 	rand.Seed(time.Now().UnixNano())
