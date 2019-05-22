@@ -36,6 +36,7 @@ func init() {
 		g.Put("/put", Anything)
 		g.Patch("/patch", Anything)
 		g.Delete("/delete", Anything)
+		g.Trace("/trace", Anything)
 
 		Any(g, "/anything", Anything)
 		Any(g, "/anything/*", Anything)
