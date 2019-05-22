@@ -18,7 +18,6 @@ import (
 const (
 	StatusOK = http.StatusOK
 
-	Host               = "Host"
 	XForwardedProto    = "X-Forwarded-Proto"
 	XForwardedProtocol = "X-Forwarded-Protocol"
 	XForwardedSSL      = "X-Forwarded-Ssl"
@@ -139,7 +138,7 @@ func Stream(c *server.Context) error {
 	}
 
 	c.Stream(func(w io.Writer) bool {
-		rnd := time.Duration(rand.Int63n(int64(time.Second * 15)))
+		rnd := time.Duration(rand.Int63n(int64(time.Second * 2)))
 		c.Log().WithField("delay", rnd).Debug("sleeping")
 		time.Sleep(time.Duration(rnd))
 
@@ -195,19 +194,13 @@ func getURL(req *http.Request) string {
 	if scheme == "" && req.Header.Get(XForwardedSSL) == "on" {
 		scheme = "https"
 	}
-
-	host := req.Header.Get(Host)
+	if scheme == "" {
+		scheme = "http"
+	}
 
 	u := *req.URL
-
-	if scheme != "" {
-		u.Scheme = scheme
-	}
-
-	if u.Host == "" {
-		u.Host = host
-	}
-
+	u.Scheme = scheme
+	u.Host = req.Host
 	return u.String()
 }
 

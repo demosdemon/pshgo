@@ -30,6 +30,7 @@ type Request struct {
 	Proto      string            `json:"proto"`
 	Referrer   string            `json:"referrer,omitempty"`
 	UserAgent  string            `json:"use_agent"`
+	Host       string            `json:"host"`
 	Headers    map[string]string `json:"headers"`
 	Delay      time.Duration     `json:"delay,omitempty"`
 	Status     int               `json:"status,omitempty"`
@@ -51,6 +52,7 @@ func NewRequest(c lars.Context) {
 		Proto:      req.Proto,
 		Referrer:   req.Referer(),
 		UserAgent:  req.UserAgent(),
+		Host:       req.Host,
 		Headers:    cloneHeaders(req.Header),
 	}
 
@@ -91,7 +93,7 @@ func (r Request) String() string {
 		r.Username,
 		r.Start.Format(LogTimeFormat),
 		fmt.Sprintf("%s %s %s", r.Method, r.URL, r.Proto),
-		r.Headers["Host"],
+		r.Host,
 		r.Delay.String(),
 		fmt.Sprintf("%03d", r.Status),
 		fmt.Sprintf("%d", r.Size),
