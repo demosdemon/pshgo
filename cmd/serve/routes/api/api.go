@@ -114,7 +114,7 @@ func Redirect(c *server.Context) error {
 	}
 
 	n--
-	if n == 0 {
+	if n <= 0 {
 		http.Redirect(c.Response(), c.Request(), "/api/get", http.StatusFound)
 	} else {
 		http.Redirect(c.Response(), c.Request(), fmt.Sprintf("/api/redirect/%d", n), http.StatusFound)
