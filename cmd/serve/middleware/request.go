@@ -44,9 +44,14 @@ func NewRequest(c lars.Context) {
 	now := time.Now()
 	req := c.Request()
 
+	id := req.Header.Get("X-Request-Id")
+	if id == "" {
+		id = randomID()
+	}
+
 	r := &Request{
 		Start:      now,
-		ID:         randomID(),
+		ID:         id,
 		ClientIP:   c.ClientIP(),
 		RemoteAddr: req.RemoteAddr,
 		Method:     req.Method,
