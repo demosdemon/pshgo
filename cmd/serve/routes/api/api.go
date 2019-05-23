@@ -147,7 +147,7 @@ func Stream(c *server.Context) error {
 
 	c.Stream(func(w io.Writer) bool {
 		rnd := time.Duration(rand.Int63n(int64(time.Second * 2)))
-		c.Log().WithField("delay", rnd).Debug("sleeping")
+		c.Log().WithField("duration", rnd).Debug("sleeping")
 		time.Sleep(time.Duration(rnd))
 
 		enc := json.NewEncoder(w)
