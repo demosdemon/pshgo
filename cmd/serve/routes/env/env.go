@@ -1,11 +1,11 @@
 package env
 
 import (
+	"github.com/demosdemon/pshgo"
+	"github.com/demosdemon/pshgo/cmd/serve/errors"
+	"github.com/demosdemon/pshgo/cmd/serve/server"
 	"github.com/go-playground/lars"
 	"github.com/joho/godotenv"
-
-	"github.com/demosdemon/pshgo"
-	"github.com/demosdemon/pshgo/cmd/serve/server"
 )
 
 func init() {
@@ -13,6 +13,7 @@ func init() {
 		g.Get("", GetEnv)
 		g.Get("/export", GetExport)
 		g.Get("/application", GetApplication)
+		g.Get("/routes", GetRoutes)
 	})
 }
 
@@ -25,7 +26,7 @@ func GetExport(c *server.Context) error {
 	env := pshgo.CloneProvider(c).(pshgo.MapProvider)
 	marshaled, err := godotenv.Marshal(env)
 	if err != nil {
-		return err
+		return errors.InternalServerError("unable to marshal environment", err)
 	}
 
 	return c.Text(200, marshaled)
@@ -34,7 +35,15 @@ func GetExport(c *server.Context) error {
 func GetApplication(c *server.Context) error {
 	app := c.GetApplication()
 	if app == nil {
-		return c.Text(400, "Not Found")
+		return errors.NotFound("Not Found", nil)
 	}
 	return c.JSON(200, app)
+}
+
+func GetRoutes(c *server.Context) error {
+	routes := c.GetRoutes()
+	if routes == nil {
+		return errors.NotFound("Not Found", nil)
+	}
+	return c.JSON(200, routes)
 }
