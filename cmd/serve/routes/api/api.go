@@ -109,6 +109,10 @@ func Redirect(c *server.Context) error {
 		return err
 	}
 
+	if n > 50 {
+		n = 50
+	}
+
 	n--
 	if n == 0 {
 		http.Redirect(c.Response(), c.Request(), "/api/get", http.StatusFound)
