@@ -8,12 +8,12 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type ClientCertificateAuthority struct {
+type Certificate struct {
 	*x509.Certificate
 }
 
-func (v ClientCertificateAuthority) MarshalText() ([]byte, error) {
-	logrus.Trace("ClientCertificateAuthority.MarshalText")
+func (v Certificate) MarshalText() ([]byte, error) {
+	logrus.Trace("Certificate.MarshalText")
 	var block = pem.Block{
 		Type:  "CERTIFICATE",
 		Bytes: v.Raw,
@@ -22,8 +22,8 @@ func (v ClientCertificateAuthority) MarshalText() ([]byte, error) {
 	return data, nil
 }
 
-func (v *ClientCertificateAuthority) UnmarshalText(text []byte) error {
-	logrus.Trace("ClientCertificateAuthority.UnmarshalText")
+func (v *Certificate) UnmarshalText(text []byte) error {
+	logrus.Trace("Certificate.UnmarshalText")
 	block, rest := pem.Decode(text)
 	if block == nil {
 		return errors.New("invalid PEM data")
@@ -36,6 +36,6 @@ func (v *ClientCertificateAuthority) UnmarshalText(text []byte) error {
 		return err
 	}
 
-	*v = ClientCertificateAuthority{Certificate: cert}
+	*v = Certificate{Certificate: cert}
 	return nil
 }

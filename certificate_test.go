@@ -92,22 +92,22 @@ func init() {
 	}
 }
 
-func TestClientCertificateAuthority_MarshalText(t *testing.T) {
+func TestCertificate_MarshalText(t *testing.T) {
 	cases := []struct {
 		name    string
-		v       ClientCertificateAuthority
+		v       Certificate
 		want    string
 		wantErr bool
 	}{
 		{
 			name:    "RootCertificate",
-			v:       ClientCertificateAuthority{Certificate: rootCertificate},
+			v:       Certificate{Certificate: rootCertificate},
 			want:    rootCertificatePEM,
 			wantErr: false,
 		},
 		{
 			name:    "IntermediateCertificate",
-			v:       ClientCertificateAuthority{Certificate: intermediateCertificate},
+			v:       Certificate{Certificate: intermediateCertificate},
 			want:    intermediateCertificatePEM,
 			wantErr: false,
 		},
@@ -133,41 +133,41 @@ func TestClientCertificateAuthority_MarshalText(t *testing.T) {
 	}
 }
 
-func TestClientCertificateAuthority_UnmarshalText(t *testing.T) {
+func TestCertificate_UnmarshalText(t *testing.T) {
 	cases := []struct {
 		name    string
 		text    string
-		want    ClientCertificateAuthority
+		want    Certificate
 		wantErr bool
 	}{
 		{
 			name:    "RootCertificate",
 			text:    rootCertificatePEM,
-			want:    ClientCertificateAuthority{Certificate: rootCertificate},
+			want:    Certificate{Certificate: rootCertificate},
 			wantErr: false,
 		},
 		{
 			name:    "IntermediateCertificate",
 			text:    intermediateCertificatePEM,
-			want:    ClientCertificateAuthority{Certificate: intermediateCertificate},
+			want:    Certificate{Certificate: intermediateCertificate},
 			wantErr: false,
 		},
 		{
 			name:    "Invalid PEM Data",
 			text:    "-----HELLO WORLD-----\n",
-			want:    ClientCertificateAuthority{},
+			want:    Certificate{},
 			wantErr: true,
 		},
 		{
 			name:    "Excess data after PEM Data",
 			text:    rootCertificatePEM + intermediateCertificatePEM,
-			want:    ClientCertificateAuthority{},
+			want:    Certificate{},
 			wantErr: true,
 		},
 		{
 			name:    "Invalid Certificate",
 			text:    privateKey256PEM,
-			want:    ClientCertificateAuthority{},
+			want:    Certificate{},
 			wantErr: true,
 		},
 	}
@@ -176,7 +176,7 @@ func TestClientCertificateAuthority_UnmarshalText(t *testing.T) {
 	for _, c := range cases {
 		c := c
 		t.Run(c.name, func(t *testing.T) {
-			var got ClientCertificateAuthority
+			var got Certificate
 			err := got.UnmarshalText([]byte(c.text))
 			assert.True(t, (err != nil) == c.wantErr)
 			assert.EqualValues(t, c.want, got)

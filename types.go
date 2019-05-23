@@ -166,10 +166,10 @@ type (
 	}
 
 	TLSSettings struct {
-		StrictTransportSecurity      TLSSTS                       `json:"strict_transport_security"`
-		MinVersion                   *TLSVersion                  `json:"min_version"`
-		ClientAuthentication         string                       `json:"client_authentication"`
-		ClientCertificateAuthorities []ClientCertificateAuthority `json:"client_certificate_authorities"`
+		StrictTransportSecurity      TLSSTS        `json:"strict_transport_security"`
+		MinVersion                   *TLSVersion   `json:"min_version"`
+		ClientAuthentication         string        `json:"client_authentication"`
+		ClientCertificateAuthorities []Certificate `json:"client_certificate_authorities"`
 	}
 
 	TLSSTS struct {
