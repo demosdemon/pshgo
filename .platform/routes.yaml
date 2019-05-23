@@ -1,7 +1,34 @@
 https://{default}/:
-    type: upstream
-    upstream: app:http
+  type: upstream
+  upstream: app:http
+  redirects:
+    expires: 1h
+    paths:
+      /ip:
+        to: /api/ip
+      /uuid:
+        to: /api/uuid
+      /headers:
+        to: /api/headers
+      /get:
+        to: /api/get
+      /post:
+        to: /api/post
+      /put:
+        to: /api/put
+      /patch:
+        to: /api/patch
+      /delete:
+        to: /api/delete
+      /trace:
+        to: /api/trace
+      /anything:
+        to: /api/anything
+      /redirect:
+        to: /api/redirect
+      /stream:
+        to: /api/stream
 
 http://{default}/:
-    type: redirect
-    to: https://{default}/
+  type: redirect
+  to: https://{default}/
