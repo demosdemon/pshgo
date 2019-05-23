@@ -3,6 +3,7 @@ package pshgo_test
 import (
 	"crypto/x509"
 	"encoding/pem"
+	"net/url"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -72,9 +73,12 @@ V1c6Y7VuMmgCkLt5P5FDqqLrz8XPMWfRV/2vZGXASwIRAPsVnobZgYRKSYaC+eCy
 -----END RSA PRIVATE KEY-----
 `
 
+const xClientCertText = "-----BEGIN%20CERTIFICATE-----%0AMIIELDCCAxSgAwIBAgIQfvKeYlfCn+Ouq2k4FBBE0DANBgkqhkiG9w0BAQsFADCB%0AkDELMAkGA1UEBhMCVVMxEjAQBgNVBAgTCUxvdWlzaWFuYTESMBAGA1UEBxMJTGFm%0AYXlldHRlMRswGQYDVQQKExJMZUJsYW5jIENvZGVzLCBMTEMxETAPBgNVBAsTCFNl%0AY3VyaXR5MSkwJwYDVQQDEyBMZUJsYW5jIENvZGVzLCBMTEMgLSBJbnRlcm5hbCBD%0AQTAeFw0xOTA1MDkwMTI0NDNaFw0yMDA1MDgwMTI0NDNaMIGFMQswCQYDVQQGEwJV%0AUzESMBAGA1UECBMJTG91aXNpYW5hMRIwEAYDVQQHEwlMYWZheWV0dGUxGzAZBgNV%0ABAoTEkxlQmxhbmMgQ29kZXMsIExMQzERMA8GA1UECxMIU2VjdXJpdHkxHjAcBgNV%0ABAMMFWJyYW5kb25AbGVibGFuYy5jb2RlczCCASIwDQYJKoZIhvcNAQEBBQADggEP%0AADCCAQoCggEBAMJVMEpnZU3QFrHa7WKR6+ifuguvo%2FU1OJMUSgZFbweolDtoLqaV%0AzQW+HeyHpVU2vfqH8aRdH1uZUodr1Oz09TIJCzq5FC+DQERi9waFpai+M1jNryDM%0At7NLOPGpvkhYwz2nys2IHpI81JNnWt8XaA6VyylqrOteIOFmMgwEpuDXfMxjRsl7%0AUr1RJggqIzuq+LsFbTzNE3Kw4mqLlDcFv1R45RR9zDtYH0A0HS7aqHrVK%2FXjJowj%0A6DFGAW7QWngVJk%2FeUfD9TjoSMEHjzqPMV5%2F%2FkK0TLojGyaEr7c%2FdTi01HUkNTy0a%0AUn0gleMZCmB9pzLKr6mHvzj+k35ALT1LwgMCAwEAAaOBijCBhzAOBgNVHQ8BAf8E%0ABAMCBaAwEwYDVR0lBAwwCgYIKwYBBQUHAwIwHQYDVR0OBBYEFBhQrDTG055UZOEH%0AF2TrFFSDTvLSMB8GA1UdIwQYMBaAFNB1uKK4V9GKovBxEe++YHy1st2RMCAGA1Ud%0AEQQZMBeBFWJyYW5kb25AbGVibGFuYy5jb2RlczANBgkqhkiG9w0BAQsFAAOCAQEA%0AyRNX1LWYiQBV0Gc4e8cLBE1KnLZip70clGmf3Kq1dDVpoBfsRmhDY1TK%2F15ZGEvr%0AMYgRt2nCpP02x1V5vJABgvQD8OTAqMlGYioLrJHhBrk1%2Ff30PBl2lsN3gzZ54t67%0ArWUWMVULucNU+kkbWrhYF7TdOhnlZMFB4DtDOY0yGQ+enw1GcMCepuYYXcAXSrgI%0A1M%2FtdJXD67E%2FGFi5EFvGPRyqLvrLJvQtpFzZILLn6Ex9BK0uDJvYGQylcPb%2Fu8CF%0AHYoXkVwcYD9moTRykiZlf53qGGPei8gD%2FV7tJQOpvVT9F42cvd8MQIsfPI6e%2FJ3e%0Aaq8WsZtlcFVutZwp1BpT0Q==%0A-----END%20CERTIFICATE-----%0A"
+
 var (
 	rootCertificate         *x509.Certificate
 	intermediateCertificate *x509.Certificate
+	xClientCert             *x509.Certificate
 )
 
 func init() {
@@ -87,6 +91,13 @@ func init() {
 
 	intermediateCertificateBlock, _ := pem.Decode([]byte(intermediateCertificatePEM))
 	intermediateCertificate, err = x509.ParseCertificate(intermediateCertificateBlock.Bytes)
+	if err != nil {
+		panic(err)
+	}
+
+	xClientCertPEM, _ := url.PathUnescape(xClientCertText)
+	xClientCertBlock, _ := pem.Decode([]byte(xClientCertPEM))
+	xClientCert, err = x509.ParseCertificate(xClientCertBlock.Bytes)
 	if err != nil {
 		panic(err)
 	}
@@ -150,6 +161,12 @@ func TestCertificate_UnmarshalText(t *testing.T) {
 			name:    "IntermediateCertificate",
 			text:    intermediateCertificatePEM,
 			want:    Certificate{Certificate: intermediateCertificate},
+			wantErr: false,
+		},
+		{
+			name:    "X-Client-Cert",
+			text:    xClientCertText,
+			want:    Certificate{Certificate: xClientCert},
 			wantErr: false,
 		},
 		{
