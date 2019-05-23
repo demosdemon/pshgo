@@ -31,7 +31,7 @@ type Request struct {
 	URL        string            `json:"url"`
 	Proto      string            `json:"proto"`
 	Referrer   string            `json:"referrer,omitempty"`
-	UserAgent  string            `json:"use_agent"`
+	UserAgent  string            `json:"user_agent"`
 	Host       string            `json:"host"`
 	Headers    map[string]string `json:"headers"`
 	Delay      pshgo.Duration    `json:"delay,omitempty"`
