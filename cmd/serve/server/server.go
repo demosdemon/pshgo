@@ -48,6 +48,7 @@ func New(g *Globals) *Server {
 
 	s.Use(
 		// order is important
+		middleware.Gzip,
 		middleware.NewRequest,
 		middleware.Log,
 		middleware.Recover,

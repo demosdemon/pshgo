@@ -8,7 +8,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/go-playground/lars/middleware"
 	"github.com/joho/godotenv"
 	"github.com/octago/sflags/gen/gflag"
 	"github.com/sirupsen/logrus"
@@ -97,8 +96,6 @@ func (c *Config) Execute() error {
 	s := server.New(&server.Globals{
 		Environment: env,
 	})
-
-	s.Use(middleware.Gzip)
 
 	l, err := env.Listener()
 	if err != nil {

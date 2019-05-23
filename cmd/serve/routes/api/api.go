@@ -12,7 +12,6 @@ import (
 	"time"
 
 	"github.com/go-playground/lars"
-	"github.com/go-playground/lars/middleware"
 	"github.com/google/uuid"
 
 	"github.com/demosdemon/pshgo/cmd/serve/server"
@@ -42,8 +41,6 @@ func init() {
 
 		Any(g, "/anything", Anything)
 		Any(g, "/anything/*", Anything)
-
-		g.Get("/gzip", middleware.Gzip, Anything)
 
 		g.Get("/redirect/:n", Redirect)
 		g.Get("/stream/:n", Stream)
