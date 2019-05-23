@@ -1,8 +1,10 @@
 package pshgo
 
 import (
+	"bytes"
 	"crypto/x509"
 	"encoding/pem"
+	"net/url"
 
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -24,6 +26,16 @@ func (v Certificate) MarshalText() ([]byte, error) {
 
 func (v *Certificate) UnmarshalText(text []byte) error {
 	logrus.Trace("Certificate.UnmarshalText")
+
+	if bytes.Index(text, []byte("%20")) >= 0 {
+		logrus.WithField("text", string(text)).Debug("detected percent encoding")
+		t, err := url.PathUnescape(string(text))
+		if err != nil {
+			return errors.Wrap(err, "error decoding path escaping")
+		}
+		text = []byte(t)
+	}
+
 	block, rest := pem.Decode(text)
 	if block == nil {
 		return errors.New("invalid PEM data")
