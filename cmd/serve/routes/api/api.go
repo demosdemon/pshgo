@@ -85,7 +85,7 @@ func GetUUID(c *server.Context) error {
 }
 
 func GetHeaders(c *server.Context) error {
-	return c.JSON(StatusOK, c.Request().Header)
+	return c.JSON(StatusOK, NewResponse(c).Headers)
 }
 
 func GetUserAgent(c *server.Context) error {
